@@ -78,12 +78,12 @@ if os.path.exists(rawFullName):
             print(workID)
     # stuff
 
-    outputNameCoreMaxLength = 255 - len("[]") - len(workID) - len(".html")
+    outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
     outputName = workName.replace(" ", "_")
     outputName = outputName.strip("/\\!#$%^*|;:<>?")
     if len(outputName) > outputNameCoreMaxLength:
         outputName = outputName[:outputNameCoreMaxLength]
-    outputName = outputName + "[" + workID + "]" + ".html"
+    outputName = outputName + "_[" + workID + "]" + ".html"
     outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
     with open(outputFullName, "w") as output:
         indent = 0
