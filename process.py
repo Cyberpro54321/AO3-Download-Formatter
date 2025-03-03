@@ -12,6 +12,14 @@ parser.add_argument("-c", "--config", default="config/config.ini")
 args = parser.parse_args()
 
 # configparser
+if not os.path.exists(args.config):
+    if args.config == "config/config.ini":
+        with open("config.default.ini", "r") as default:
+            with open("config/config.ini", "w") as target:
+                for i in default:
+                    target.write(i)
+    else:
+        raise Exception("Config file '" + args.config + "' doesn't exist.")
 config = configparser.ConfigParser()
 config.read(args.config)
 
