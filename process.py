@@ -64,5 +64,24 @@ if os.path.exists(rawFullName):
             bufferMain.append(i.strip())
     for i in bufferMain:
         print(i)
+    # stuff
+
+    outputFullName = dirStorageProcessed + dirOutput + "/" + rawName
+    with open(outputFullName, "w") as output:
+        indent = 0
+        for i in bufferMain:
+            if (i.find("<div") == -1 and i.find("</div>") != -1) or (
+                i.find("<head") == -1 and i.find("</head>") != -1
+            ):
+                indent -= 1
+            outputString = ""
+            for j in range(indent):
+                outputString = outputString + "  "
+            outputString = outputString + i + "\n"
+            output.write(outputString)
+            if (i.find("<div") != -1 and i.find("</div>") == -1) or (
+                i.find("<head") != -1 and i.find("</head>") == -1
+            ):
+                indent += 1
 else:
     raise Exception("File not found: " + rawFullName)
