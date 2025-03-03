@@ -59,6 +59,7 @@ print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
 rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
 if os.path.exists(rawFullName):
     bufferMain = []
+    workID = ""
     with open(rawFullName, "r") as raw:
         for i in raw:
             bufferMain.append(i.strip())
@@ -66,6 +67,13 @@ if os.path.exists(rawFullName):
         if i.find("<h1>") != -1:
             workName = i[i.find(">") + 1: i.find("<", 3)]
             print(workName)
+        if i.find("archiveofourown.org/works/") != -1 and not workID:
+            temp = i.find("archiveofourown.org/works/") + len(
+                "archiveofourown.org/works/"
+            )
+            workID = i[temp: temp + 8]
+            del temp
+            print(workID)
     # stuff
 
     outputFullName = dirStorageProcessed + dirOutput + "/" + workName
