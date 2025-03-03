@@ -57,56 +57,53 @@ for i in [
         )
 print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
 rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
-if os.path.exists(rawFullName):
-    bufferMain = []
-    workID = ""
-    with open(rawFullName, "r") as raw:
-        for i in raw:
-            j = i.strip()
-            if j != "":
-                bufferMain.append(j)
-    for i in bufferMain:
-        if i.find("<h1>") != -1:
-            workName = i[i.find(">") + 1: i.find("<", 3)]
-            print(workName)
-        if i.find("archiveofourown.org/works/") != -1 and not workID:
-            temp = i.find("archiveofourown.org/works/") + len(
-                "archiveofourown.org/works/"
-            )
-            workID = i[temp: temp + 8]
-            del temp
-            print(workID)
-    # stuff
-    for i in range(len(bufferMain)):
-        if bufferMain[i].find("<style") != -1:
-            styleBuiltinStart = i
-        if bufferMain[i].find("</style>") != -1:
-            styleBuiltinEnd = i
-    for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
-        bufferMain.pop(styleBuiltinStart)
-
-    outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
-    outputName = workName.replace(" ", "_")
-    outputName = outputName.strip("/\\!#$%^*|;:<>?")
-    if len(outputName) > outputNameCoreMaxLength:
-        outputName = outputName[:outputNameCoreMaxLength]
-    outputName = outputName + "_[" + workID + "]" + ".html"
-    outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
-    with open(outputFullName, "w") as output:
-        indent = 0
-        for i in bufferMain:
-            if (i.find("<div") == -1 and i.find("</div>") != -1) or (
-                i.find("<head") == -1 and i.find("</head>") != -1
-            ):
-                indent -= 1
-            outputString = ""
-            for j in range(indent):
-                outputString = outputString + "  "
-            outputString = outputString + i + "\n"
-            output.write(outputString)
-            if (i.find("<div") != -1 and i.find("</div>") == -1) or (
-                i.find("<head") != -1 and i.find("</head>") == -1
-            ):
-                indent += 1
-else:
+if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
+bufferMain = []
+workID = ""
+with open(rawFullName, "r") as raw:
+    for i in raw:
+        j = i.strip()
+        if j != "":
+            bufferMain.append(j)
+for i in bufferMain:
+    if i.find("<h1>") != -1:
+        workName = i[i.find(">") + 1: i.find("<", 3)]
+        print(workName)
+    if i.find("archiveofourown.org/works/") != -1 and not workID:
+        temp = i.find("archiveofourown.org/works/") + len("archiveofourown.org/works/")
+        workID = i[temp: temp + 8]
+        del temp
+        print(workID)
+# stuff
+for i in range(len(bufferMain)):
+    if bufferMain[i].find("<style") != -1:
+        styleBuiltinStart = i
+    if bufferMain[i].find("</style>") != -1:
+        styleBuiltinEnd = i
+for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
+    bufferMain.pop(styleBuiltinStart)
+
+outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
+outputName = workName.replace(" ", "_")
+outputName = outputName.strip("/\\!#$%^*|;:<>?")
+if len(outputName) > outputNameCoreMaxLength:
+    outputName = outputName[:outputNameCoreMaxLength]
+outputName = outputName + "_[" + workID + "]" + ".html"
+outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
+with open(outputFullName, "w") as output:
+    indent = 0
+    for i in bufferMain:
+        if (i.find("<div") == -1 and i.find("</div>") != -1) or (
+            i.find("<head") == -1 and i.find("</head>") != -1
+        ):
+            indent -= 1
+        outputString = ""
+        for j in range(indent):
+            outputString = outputString + "  "
+        outputString = outputString + i + "\n"
+        output.write(outputString)
+        if (i.find("<div") != -1 and i.find("</div>") == -1) or (
+            i.find("<head") != -1 and i.find("</head>") == -1
+        ):
+            indent += 1
