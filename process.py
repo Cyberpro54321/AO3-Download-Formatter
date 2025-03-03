@@ -19,17 +19,17 @@ config.read(args.config)
 rawName = args.rawName
 if rawName[-5:] != ".html":
     rawName = rawName + ".html"
-dirStorageRaw = config["General"]["dir_storage"]
+dirStorageRaw = config["dir"]["storage"]
 dirStorageProcessed = os.path.abspath(os.path.expanduser(dirStorageRaw))
 if dirStorageProcessed[-1:] != "/":
     dirStorageProcessed = dirStorageProcessed + "/"
-dirRaws = config["General"]["dir_raws"]
-dirOutput = config["General"]["dir_output"]
-dirWorkskins = config["General"]["dir_workskins"]
-if config["General"]["ao3css_in_storage"]:
-    dirAO3CSS = dirStorageProcessed + config["General"]["dir_ao3css"]
+dirRaws = config["dir"]["raws"]
+dirOutput = config["dir"]["output"]
+dirWorkskins = config["dir"]["workskins"]
+if config["ao3css"]["in_storage"]:
+    dirAO3CSS = dirStorageProcessed + config["dir"]["ao3css"]
 else:
-    dirAO3CSS = config["General"]["dir_ao3css"]
+    dirAO3CSS = config["dir"]["ao3css"]
 
 
 # main
