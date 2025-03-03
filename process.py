@@ -77,6 +77,13 @@ if os.path.exists(rawFullName):
             del temp
             print(workID)
     # stuff
+    for i in range(len(bufferMain)):
+        if bufferMain[i].find("<style") != -1:
+            styleBuiltinStart = i
+        if bufferMain[i].find("</style>") != -1:
+            styleBuiltinEnd = i
+    for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
+        bufferMain.pop(styleBuiltinStart)
 
     outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
     outputName = workName.replace(" ", "_")
