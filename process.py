@@ -47,6 +47,4 @@ for i in [
             + ") doesn't exist: "
             + i
         )
-if not os.path.exists(dirStorageProcessed):
-    print(dirStorageProcessed + " doesn't seem to exist.")
 print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
