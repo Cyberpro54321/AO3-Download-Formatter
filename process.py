@@ -63,10 +63,12 @@ if os.path.exists(rawFullName):
         for i in raw:
             bufferMain.append(i.strip())
     for i in bufferMain:
-        print(i)
+        if i.find("<h1>") != -1:
+            workName = i[i.find(">") + 1: i.find("<", 3)]
+            print(workName)
     # stuff
 
-    outputFullName = dirStorageProcessed + dirOutput + "/" + rawName
+    outputFullName = dirStorageProcessed + dirOutput + "/" + workName
     with open(outputFullName, "w") as output:
         indent = 0
         for i in bufferMain:
