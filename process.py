@@ -56,3 +56,13 @@ for i in [
             + i
         )
 print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
+rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
+if os.path.exists(rawFullName):
+    bufferMain = []
+    with open(rawFullName, "r") as raw:
+        for i in raw:
+            bufferMain.append(i)
+    for i in bufferMain:
+        print(i, end="")
+else:
+    raise Exception("File not found: " + rawFullName)
