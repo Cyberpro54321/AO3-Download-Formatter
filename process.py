@@ -61,8 +61,8 @@ if os.path.exists(rawFullName):
     bufferMain = []
     with open(rawFullName, "r") as raw:
         for i in raw:
-            bufferMain.append(i)
+            bufferMain.append(i.strip())
     for i in bufferMain:
-        print(i, end="")
+        print(i)
 else:
     raise Exception("File not found: " + rawFullName)
