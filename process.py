@@ -162,6 +162,14 @@ for i in range(4):
     bufferMain.insert(bodyEnd, "</div>")
 del bodyEnd
 
+bufferMain.remove('<div id="preface">')
+bufferMain[bufferMain.index('<dl class="tags">')] = '<dl class="work meta group">'
+bufferMain[bufferMain.index('<div id="afterword">')] = (
+    '<div class="afterword preface group">'
+)
+bufferMain.pop(bufferMain.index('<div id="chapters" class="userstuff">') - 1)
+
+
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
 outputName = workName.replace(" ", "_")
 outputName = outputName.strip("/\\!#$%^*|;:<>?")
