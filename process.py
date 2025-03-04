@@ -170,6 +170,10 @@ for i in range(reasonableMaxHeadLength):
             bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
         ]
         print(workName)
+        bufferMain.insert(i, '<div class="preface group">')
+        bufferMain.insert(i, '<div id="workskin">')
+        bufferMain.insert(i, "</div>")
+        bufferMain.insert(i, "</div>")
 
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
