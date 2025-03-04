@@ -66,17 +66,19 @@ with open(rawFullName, "r") as raw:
         j = i.strip()
         if j != "":
             bufferMain.append(j)
-for i in bufferMain:
-    if i.find("<h1>") != -1:
-        workName = i[i.find(">") + 1: i.find("<", 3)]
+for i in range(len(bufferMain)):
+    if bufferMain[i].find("<h1>") != -1:
+        workName = bufferMain[i][
+            bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
+        ]
         print(workName)
-    if i.find("archiveofourown.org/works/") != -1 and not workID:
-        temp = i.find("archiveofourown.org/works/") + len("archiveofourown.org/works/")
-        workID = i[temp: temp + 8]
+    if bufferMain[i].find("archiveofourown.org/works/") != -1 and not workID:
+        temp = bufferMain[i].find("archiveofourown.org/works/") + len(
+            "archiveofourown.org/works/"
+        )
+        workID = bufferMain[i][temp: temp + 8]
         del temp
         print(workID)
-# stuff
-for i in range(len(bufferMain)):
     if bufferMain[i].find("<style") != -1:
         styleBuiltinStart = i
     if bufferMain[i].find("</style>") != -1:
