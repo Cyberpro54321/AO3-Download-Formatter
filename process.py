@@ -141,7 +141,6 @@ for i in reversed(stylesheets):
         + i[1]
         + '">',
     )
-print(headEnd)
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
 outputName = workName.replace(" ", "_")
