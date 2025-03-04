@@ -97,6 +97,7 @@ rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
 if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
 bufferMain = []
+reasonableMaxHeadLength = 200
 workID = ""
 workName = ""
 styleBuiltinStart = 0
@@ -106,7 +107,7 @@ with open(rawFullName, "r") as raw:
         j = i.strip()
         if j != "":
             bufferMain.append(j)
-for i in range(len(bufferMain)):
+for i in range(reasonableMaxHeadLength):
     if bufferMain[i].find("<h1>") != -1 and not workName:
         workName = bufferMain[i][
             bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
@@ -126,7 +127,7 @@ for i in range(len(bufferMain)):
 for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
     bufferMain.pop(styleBuiltinStart)
 headEnd = 0
-for i in range(len(bufferMain)):
+for i in range(reasonableMaxHeadLength):
     if (not headEnd) and bufferMain[i].find("</head>") != -1:
         headEnd = i
 for i in stylesheets:
