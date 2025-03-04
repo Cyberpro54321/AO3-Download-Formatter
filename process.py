@@ -38,7 +38,7 @@ if config["ao3css"]["in_storage"]:
     dirAO3CSS = dirStorageProcessed + config["dir"]["ao3css"]
 else:
     dirAO3CSS = config["dir"]["ao3css"]
-if config["ao3css"]["merged"]:
+if config["ao3css"].getboolean("merged"):
     stylesheets = [
         ["screen", "1_site_screen_.css"],
         ["only screen and (max-width: 62em), handheld", "4_site_midsize.handheld_.css"],
