@@ -126,6 +126,9 @@ for i in range(reasonableMaxHeadLength):
         styleBuiltinEnd = i
 for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
     bufferMain.pop(styleBuiltinStart)
+del styleBuiltinStart
+del styleBuiltinEnd
+
 headEnd = 0
 for i in range(reasonableMaxHeadLength):
     if (not headEnd) and bufferMain[i].find("</head>") != -1:
@@ -141,6 +144,23 @@ for i in reversed(stylesheets):
         + i[1]
         + '">',
     )
+del headEnd
+
+bodyStart = 0
+for i in range(reasonableMaxHeadLength):
+    if (not bodyStart) and bufferMain[i].find("<body") != -1:
+        bodyStart = i
+bufferMain.insert(bodyStart + 1, '<div class="wrapper">')
+bufferMain.insert(bodyStart + 1, '<div id="main" class="works-show-region">')
+bufferMain.insert(bodyStart + 1, '<div id="inner" class="wrapper">')
+bufferMain.insert(bodyStart + 1, '<div id="outer" class="wrapper">')
+bodyEnd = 0
+for i in range(len(bufferMain) - 50, len(bufferMain)):
+    if (not bodyEnd) and bufferMain[i].find("</body>") != -1:
+        bodyEnd = i
+for i in range(4):
+    bufferMain.insert(bodyEnd, "</div>")
+del bodyEnd
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
 outputName = workName.replace(" ", "_")
