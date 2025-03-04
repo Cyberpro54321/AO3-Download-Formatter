@@ -99,7 +99,6 @@ if not os.path.exists(rawFullName):
 bufferMain = []
 reasonableMaxHeadLength = 200
 workID = ""
-workName = ""
 styleBuiltinStart = 0
 styleBuiltinEnd = 0
 with open(rawFullName, "r") as raw:
@@ -108,11 +107,6 @@ with open(rawFullName, "r") as raw:
         if j != "":
             bufferMain.append(j)
 for i in range(reasonableMaxHeadLength):
-    if bufferMain[i].find("<h1>") != -1 and not workName:
-        workName = bufferMain[i][
-            bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
-        ]
-        print(workName)
     if bufferMain[i].find("archiveofourown.org/works/") != -1 and not workID:
         temp = bufferMain[i].find("archiveofourown.org/works/") + len(
             "archiveofourown.org/works/"
@@ -168,6 +162,14 @@ bufferMain[bufferMain.index('<div id="afterword">')] = (
     '<div class="afterword preface group">'
 )
 bufferMain.pop(bufferMain.index('<div id="chapters" class="userstuff">') - 1)
+
+workName = ""
+for i in range(reasonableMaxHeadLength):
+    if (not workName) and bufferMain[i].find("<h1>") != -1:
+        workName = bufferMain[i][
+            bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
+        ]
+        print(workName)
 
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
