@@ -130,7 +130,7 @@ headEnd = 0
 for i in range(reasonableMaxHeadLength):
     if (not headEnd) and bufferMain[i].find("</head>") != -1:
         headEnd = i
-for i in stylesheets:
+for i in reversed(stylesheets):
     bufferMain.insert(
         headEnd,
         '<link rel="stylesheet" type="text/css" media="'
