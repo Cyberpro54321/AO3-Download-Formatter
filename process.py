@@ -99,6 +99,8 @@ if not os.path.exists(rawFullName):
 bufferMain = []
 workID = ""
 workName = ""
+styleBuiltinStart = 0
+styleBuiltinEnd = 0
 with open(rawFullName, "r") as raw:
     for i in raw:
         j = i.strip()
@@ -117,12 +119,28 @@ for i in range(len(bufferMain)):
         workID = bufferMain[i][temp: temp + 8]
         del temp
         print(workID)
-    if bufferMain[i].find("<style") != -1:
+    if (not styleBuiltinStart) and bufferMain[i].find("<style") != -1:
         styleBuiltinStart = i
-    if bufferMain[i].find("</style>") != -1:
+    if (not styleBuiltinEnd) and bufferMain[i].find("</style>") != -1:
         styleBuiltinEnd = i
 for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
     bufferMain.pop(styleBuiltinStart)
+headEnd = 0
+for i in range(len(bufferMain)):
+    if (not headEnd) and bufferMain[i].find("</head>") != -1:
+        headEnd = i
+for i in stylesheets:
+    bufferMain.insert(
+        headEnd,
+        '<link rel="stylesheet" type="text/css" media="'
+        + i[0]
+        + '" href="'
+        + dirAO3CSS
+        + "/"
+        + i[1]
+        + '">',
+    )
+print(headEnd)
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
 outputName = workName.replace(" ", "_")
