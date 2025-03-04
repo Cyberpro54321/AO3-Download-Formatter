@@ -61,13 +61,14 @@ if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
 bufferMain = []
 workID = ""
+workName = ""
 with open(rawFullName, "r") as raw:
     for i in raw:
         j = i.strip()
         if j != "":
             bufferMain.append(j)
 for i in range(len(bufferMain)):
-    if bufferMain[i].find("<h1>") != -1:
+    if bufferMain[i].find("<h1>") != -1 and not workName:
         workName = bufferMain[i][
             bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
         ]
