@@ -5,6 +5,8 @@ import configparser  # https://docs.python.org/3/library/configparser.html
 import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
 
+version = "0.3 rc1"
+
 # argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("rawName")
@@ -174,6 +176,9 @@ for i in range(reasonableMaxHeadLength):
         bufferMain.insert(i, '<div id="workskin">')
         bufferMain.insert(i, "</div>")
         bufferMain.insert(i, "</div>")
+bufferMain.append(
+    "<!-- This file written by AO3 Download Formatter version " + version + "-->"
+)
 
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
