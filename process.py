@@ -121,7 +121,7 @@ for i in range(reasonableMaxHeadLength):
         temp = bufferMain[i].find("archiveofourown.org/works/") + len(
             "archiveofourown.org/works/"
         )
-        workID = bufferMain[i][temp: temp + 8]
+        workID = bufferMain[i][temp: bufferMain[i].find('"', temp, temp + 10)]
         del temp
         if (not args.quiet) and (not args.silent):
             print("Work ID:   " + workID)
