@@ -105,7 +105,6 @@ rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
 if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
 bufferMain = []
-reasonableMaxHeadLength = 200
 workID = ""
 styleBuiltinStart = 0
 styleBuiltinEnd = 0
@@ -114,6 +113,9 @@ with open(rawFullName, "r") as raw:
         j = i.strip()
         if j != "":
             bufferMain.append(j)
+reasonableMaxHeadLength = 350
+if len(bufferMain) < reasonableMaxHeadLength:
+    reasonableMaxHeadLength = len(bufferMain)
 for i in range(reasonableMaxHeadLength):
     if (not workID) and bufferMain[i].find("archiveofourown.org/works/") != -1:
         temp = bufferMain[i].find("archiveofourown.org/works/") + len(
@@ -188,9 +190,19 @@ for i in range(reasonableMaxHeadLength):
 chapterLine = ""
 chapterCountMax = ""
 chapterCountCurrent = 0
-for i in range(reasonableMaxHeadLength):
-    if (not chapterLine) and bufferMain[i].find("Chapters: ") != -1:
-        chapterLine = bufferMain[i]
+# for i in range(reasonableMaxHeadLength):
+#    if (not chapterLine) and bufferMain[i].find("Chapters:") != -1:
+#        chapterLine = bufferMain[i]
+chapterIndex = 0
+while not chapterLine:
+    if bufferMain[chapterIndex].find("Chapters:") != -1:
+        chapterLine = bufferMain[chapterIndex]
+    chapterIndex += 1
+# print("Chapter Debugging")
+# print(chapterLine)
+# print(chapterLine.split())
+# print(chapterLine.split()[1])
+# print(chapterLine.split()[1].split("/"))
 chapterCountCurrent = int(chapterLine.split()[1].split("/")[0])
 chapterCountMax = chapterLine.split()[1].split("/")[1]
 if (not args.quiet) and (not args.silent):
