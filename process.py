@@ -115,7 +115,7 @@ for i in range(reasonableMaxHeadLength):
         )
         workID = bufferMain[i][temp: temp + 8]
         del temp
-        print(workID)
+        print("Work ID:   " + workID)
     if (not styleBuiltinStart) and bufferMain[i].find("<style") != -1:
         styleBuiltinStart = i
     if (not styleBuiltinEnd) and bufferMain[i].find("</style>") != -1:
@@ -171,11 +171,22 @@ for i in range(reasonableMaxHeadLength):
         workName = bufferMain[i][
             bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
         ]
-        print(workName)
+        print("Work Name: " + workName)
         bufferMain.insert(i, '<div class="preface group">')
         bufferMain.insert(i, '<div id="workskin">')
         bufferMain.insert(i, "</div>")
         bufferMain.insert(i, "</div>")
+
+chapterLine = ""
+chapterCountMax = ""
+chapterCountCurrent = 0
+for i in range(reasonableMaxHeadLength):
+    if (not chapterLine) and bufferMain[i].find("Chapters: ") != -1:
+        chapterLine = bufferMain[i]
+chapterCountCurrent = int(chapterLine.split()[1].split("/")[0])
+chapterCountMax = chapterLine.split()[1].split("/")[1]
+print("Chapter #: " + str(chapterCountCurrent) + "/" + chapterCountMax)
+
 bufferMain.append(
     "<!-- This file written by AO3 Download Formatter version " + version + "-->"
 )
