@@ -213,7 +213,7 @@ else:
 alreadyInDB = False
 for i in db:
     if i["Work ID"] == workID:
-        i["Work Name"] = workName
+        i["Work Name"] = workName.strip(",")
         i["Current Chapter Count"] = chapterCountCurrent
         i["Current Total Chapter Count"] = chapterCountMax
         i["Date Downloaded"] = time.gmtime()
@@ -221,7 +221,7 @@ for i in db:
 if not alreadyInDB:
     db.append(
         {
-            "Work Name": workName,
+            "Work Name": workName.strip(","),
             "Work ID": workID,
             "Current Chapter Count": chapterCountCurrent,
             "Current Total Chapter Count": chapterCountMax,
@@ -236,11 +236,14 @@ with open(args.database, "w") as csvfile:
 
 
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
-outputName = workName.replace(" ", "_")
-outputName = outputName.strip("/\\!#$%^*|;:<>?")
+outputName = ""
+for i in workName:
+    if i.isascii() and i.isprintable():
+        outputName = outputName + i
+outputName = outputName.strip('/<>:"\\|?*')
 if len(outputName) > outputNameCoreMaxLength:
     outputName = outputName[:outputNameCoreMaxLength]
-outputName = outputName + "_[" + workID + "]" + ".html"
+outputName = outputName + " [" + workID + "]" + ".html"
 outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
 with open(outputFullName, "w") as output:
     indent = 0
