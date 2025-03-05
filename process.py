@@ -134,22 +134,6 @@ for i in range(styleBuiltinStart, styleBuiltinEnd + 1):
 del styleBuiltinStart
 del styleBuiltinEnd
 
-headEnd = 0
-for i in range(reasonableMaxHeadLength):
-    if (not headEnd) and bufferMain[i].find("</head>") != -1:
-        headEnd = i
-for i in reversed(stylesheets):
-    bufferMain.insert(
-        headEnd,
-        '<link rel="stylesheet" type="text/css" media="'
-        + i[0]
-        + '" href="'
-        + dirAO3CSS
-        + "/"
-        + i[1]
-        + '">',
-    )
-del headEnd
 
 bodyStart = 0
 for i in range(reasonableMaxHeadLength):
@@ -187,6 +171,36 @@ for i in range(reasonableMaxHeadLength):
         bufferMain.insert(i, "</div>")
         bufferMain.insert(i, "</div>")
 
+outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
+outputNameCore = ""
+for i in workName:
+    if i.isascii() and i.isprintable():
+        outputNameCore = outputNameCore + i
+outputNameCore = outputNameCore.strip('/<>:"\\|?*')
+if len(outputNameCore) > outputNameCoreMaxLength:
+    outputNameCore = outputNameCore[:outputNameCoreMaxLength]
+outputName = outputNameCore + " [" + workID + "]" + ".html"
+outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
+
+
+headEnd = 0
+for i in range(reasonableMaxHeadLength):
+    if (not headEnd) and bufferMain[i].find("</head>") != -1:
+        headEnd = i
+bufferMain.insert(headEnd, '<link rel="stylesheet" href="sandbox.css">')
+bufferMain.insert(headEnd, '<link rel="stylesheet" href="' + outputNameCore + '.css">')
+for i in reversed(stylesheets):
+    bufferMain.insert(
+        headEnd,
+        '<link rel="stylesheet" type="text/css" media="'
+        + i[0]
+        + '" href="'
+        + dirAO3CSS
+        + "/"
+        + i[1]
+        + '">',
+    )
+del headEnd
 chapterLine = ""
 chapterCountMax = ""
 chapterCountCurrent = 0
@@ -259,16 +273,6 @@ with open(args.database, "w") as csvfile:
         writer.writerow(i)
 
 
-outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
-outputName = ""
-for i in workName:
-    if i.isascii() and i.isprintable():
-        outputName = outputName + i
-outputName = outputName.strip('/<>:"\\|?*')
-if len(outputName) > outputNameCoreMaxLength:
-    outputName = outputName[:outputNameCoreMaxLength]
-outputName = outputName + " [" + workID + "]" + ".html"
-outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
 with open(outputFullName, "w") as output:
     indent = 0
     for i in bufferMain:
