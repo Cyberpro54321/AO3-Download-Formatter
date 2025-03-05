@@ -4,7 +4,7 @@ import argparse  # https://docs.python.org/3/library/argparse.html
 import configparser  # https://docs.python.org/3/library/configparser.html
 import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
-import time  # https://docs.python.org/3/library/time.html
+import datetime  # https://docs.python.org/3/library/datetime.html
 
 version = "0.3 rc1"
 
@@ -216,7 +216,9 @@ for i in db:
         i[fieldnames[0]] = workName.strip(",")
         i[fieldnames[2]] = chapterCountCurrent
         i[fieldnames[3]] = chapterCountMax
-        i[fieldnames[4]] = time.gmtime()
+        i[fieldnames[4]] = (
+            datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
+        )
         alreadyInDB = True
 if not alreadyInDB:
     db.append(
@@ -225,7 +227,10 @@ if not alreadyInDB:
             fieldnames[1]: workID,
             fieldnames[2]: chapterCountCurrent,
             fieldnames[3]: chapterCountMax,
-            fieldnames[4]: time.gmtime(),
+            fieldnames[4]: datetime.datetime.now()
+            .astimezone()
+            .replace(microsecond=0)
+            .isoformat(),
         }
     )
 with open(args.database, "w") as csvfile:
