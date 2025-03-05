@@ -28,5 +28,5 @@ if dirStorage[-1:] != "/":
 dirRawsFull = dirStorage + config["dir"]["raws"]
 
 allRaws = os.listdir(dirRawsFull)
-for i in allRaws:
-    subprocess.run(["./process.py", "-c", args.config, "-d", args.database, "-s", i])
+for work in allRaws:
+    subprocess.run(["./process.py", "-c", args.config, "-d", args.database, "-s", work])
