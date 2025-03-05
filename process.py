@@ -29,7 +29,6 @@ parser.add_mutually_exclusive_group()
 parser.add_argument("--no-database", action="store_true")
 parser.add_argument("--yes-database", action="store_true")
 args = parser.parse_args()
-print(args)
 
 # configparser
 if not os.path.exists(args.config):
@@ -219,19 +218,11 @@ del headEnd
 chapterLine = ""
 chapterCountMax = ""
 chapterCountCurrent = 0
-# for i in range(reasonableMaxHeadLength):
-#    if (not chapterLine) and bufferMain[i].find("Chapters:") != -1:
-#        chapterLine = bufferMain[i]
 chapterIndex = 0
 while not chapterLine:
     if bufferMain[chapterIndex].find("Chapters:") != -1:
         chapterLine = bufferMain[chapterIndex]
     chapterIndex += 1
-# print("Chapter Debugging")
-# print(chapterLine)
-# print(chapterLine.split())
-# print(chapterLine.split()[1])
-# print(chapterLine.split()[1].split("/"))
 chapterCountCurrent = int(chapterLine.split()[1].split("/")[0])
 chapterCountMax = chapterLine.split()[1].split("/")[1]
 if (not args.quiet) and (not args.silent):
