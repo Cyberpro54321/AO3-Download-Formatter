@@ -7,6 +7,7 @@ import os.path  # https://docs.python.org/3/library/os.path.html
 import datetime  # https://docs.python.org/3/library/datetime.html
 
 version = "0.3 rc1"
+startTime = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
 
 # argparse
 parser = argparse.ArgumentParser()
@@ -190,7 +191,11 @@ chapterCountMax = chapterLine.split()[1].split("/")[1]
 print("Chapter #: " + str(chapterCountCurrent) + "/" + chapterCountMax)
 
 bufferMain.append(
-    "<!-- This file written by AO3 Download Formatter version " + version + "-->"
+    "<!-- This file written by AO3 Download Formatter version "
+    + version
+    + " at "
+    + startTime
+    + "-->"
 )
 
 
@@ -216,9 +221,7 @@ for i in db:
         i[fieldnames[0]] = workName.strip(",")
         i[fieldnames[2]] = chapterCountCurrent
         i[fieldnames[3]] = chapterCountMax
-        i[fieldnames[4]] = (
-            datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
-        )
+        i[fieldnames[4]] = startTime
         alreadyInDB = True
 if not alreadyInDB:
     db.append(
@@ -227,10 +230,7 @@ if not alreadyInDB:
             fieldnames[1]: workID,
             fieldnames[2]: chapterCountCurrent,
             fieldnames[3]: chapterCountMax,
-            fieldnames[4]: datetime.datetime.now()
-            .astimezone()
-            .replace(microsecond=0)
-            .isoformat(),
+            fieldnames[4]: startTime,
         }
     )
 with open(args.database, "w") as csvfile:
