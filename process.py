@@ -179,8 +179,8 @@ for i in workName:
 outputNameCore = outputNameCore.strip('/<>:"\\|?*')
 if len(outputNameCore) > outputNameCoreMaxLength:
     outputNameCore = outputNameCore[:outputNameCoreMaxLength]
-outputName = outputNameCore + " [" + workID + "]" + ".html"
-outputFullName = dirStorageProcessed + dirOutput + "/" + outputName
+outputNameCore = outputNameCore + " [" + workID + "]"
+outputFullName = dirStorageProcessed + dirOutput + "/" + outputNameCore + ".html"
 
 
 headEnd = 0
