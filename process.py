@@ -9,6 +9,15 @@ import datetime  # https://docs.python.org/3/library/datetime.html
 version = "0.6 Release Candidate 1"
 startTime = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
 
+
+def dirParser(input: str):
+    input = os.path.abspath(os.path.expanduser(input))
+    if input[-1:] != "/":
+        return input + "/"
+    else:
+        return input
+
+
 # argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("rawName")
@@ -16,7 +25,11 @@ parser.add_argument("-c", "--config", default="config/config.ini")
 parser.add_argument("-d", "--database", default="config/db.csv")
 parser.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument("-s", "--silent", action="store_true")
+parser.add_mutually_exclusive_group()
+parser.add_argument("--no-database", action="store_true")
+parser.add_argument("--yes-database", action="store_true")
 args = parser.parse_args()
+print(args)
 
 # configparser
 if not os.path.exists(args.config):
@@ -31,20 +44,18 @@ config = configparser.ConfigParser()
 config.read(args.config)
 
 # parseparser
+useDB = config["csv"].getboolean("use")
+if args.no_database:
+    useDB = False
+if args.yes_database:
+    useDB = True
 rawName = args.rawName
 if rawName[-5:] != ".html":
     rawName = rawName + ".html"
-dirStorageRaw = config["dir"]["storage"]
-dirStorageProcessed = os.path.abspath(os.path.expanduser(dirStorageRaw))
-if dirStorageProcessed[-1:] != "/":
-    dirStorageProcessed = dirStorageProcessed + "/"
-dirRaws = config["dir"]["raws"]
-dirOutput = config["dir"]["output"]
-dirWorkskins = config["dir"]["workskins"]
-if config["ao3css"]["in_storage"]:
-    dirAO3CSS = dirStorageProcessed + config["dir"]["ao3css"]
-else:
-    dirAO3CSS = config["dir"]["ao3css"]
+dirRaws = dirParser(config["dir"]["raws"])
+dirOutput = dirParser(config["dir"]["output"])
+dirWorkskins = dirParser(config["dir"]["workskins"])
+dirAO3CSS = dirParser(config["dir"]["ao3css"])
 if config["ao3css"].getboolean("merged"):
     stylesheets = [
         ["screen", "1_site_screen_.css"],
@@ -86,10 +97,9 @@ else:
 
 # main
 for i in [
-    dirStorageProcessed,
-    dirStorageProcessed + dirRaws,
-    dirStorageProcessed + dirOutput,
-    dirStorageProcessed + dirWorkskins,
+    dirRaws,
+    dirOutput,
+    dirWorkskins,
     dirAO3CSS,
 ]:
     if not os.path.exists(i):
@@ -100,8 +110,8 @@ for i in [
             + i
         )
 if (not args.quiet) and (not args.silent):
-    print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
-rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
+    print("Searching for " + rawName + " in " + dirRaws)
+rawFullName = dirRaws + rawName
 if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
 bufferMain = []
@@ -181,7 +191,7 @@ outputNameCore = outputNameCore.strip("/<>:\\|?*")
 if len(outputNameCore) > outputNameCoreMaxLength:
     outputNameCore = outputNameCore[:outputNameCoreMaxLength]
 outputNameCore = outputNameCore + " [" + workID + "]"
-outputFullName = dirStorageProcessed + dirOutput + "/" + outputNameCore + ".html"
+outputFullName = dirOutput + outputNameCore + ".html"
 
 
 headEnd = 0
@@ -190,15 +200,10 @@ for i in range(reasonableMaxHeadLength):
         headEnd = i
 bufferMain.insert(
     headEnd,
-    '<link rel="stylesheet" href="'
-    + dirStorageProcessed
-    + dirWorkskins
-    + "/"
-    + outputNameCore
-    + '.css">',
+    '<link rel="stylesheet" href="' + dirWorkskins + outputNameCore + '.css">',
 )
 bufferMain.insert(
-    headEnd, '<link rel="stylesheet" href="' + dirAO3CSS + '/sandbox.css">'
+    headEnd, '<link rel="stylesheet" href="' + dirAO3CSS + 'sandbox.css">'
 )
 for i in reversed(stylesheets):
     bufferMain.insert(
@@ -207,7 +212,6 @@ for i in reversed(stylesheets):
         + i[0]
         + '" href="'
         + dirAO3CSS
-        + "/"
         + i[1]
         + '">',
     )
