@@ -29,4 +29,5 @@ dirRawsFull = dirStorage + config["dir"]["raws"]
 
 allRaws = os.listdir(dirRawsFull)
 for work in allRaws:
+    print("Now formatting: " + work)
     subprocess.run(["./process.py", "-c", args.config, "-d", args.database, "-s", work])
