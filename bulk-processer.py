@@ -23,10 +23,9 @@ if not os.path.exists(args.config):
 config = configparser.ConfigParser()
 config.read(args.config)
 
-dirStorage = os.path.abspath(os.path.expanduser(config["dir"]["storage"]))
-if dirStorage[-1:] != "/":
-    dirStorage = dirStorage + "/"
-dirRawsFull = dirStorage + config["dir"]["raws"]
+dirRawsFull = os.path.abspath(os.path.expanduser(config["dir"]["raws"]))
+if dirRawsFull[-1:] != "/":
+    dirRawsFull = dirRawsFull + "/"
 
 allRaws = os.listdir(dirRawsFull)
 for work in allRaws:
