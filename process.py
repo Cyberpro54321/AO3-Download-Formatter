@@ -112,7 +112,7 @@ with open(rawFullName, "r") as raw:
         if j != "":
             bufferMain.append(j)
 for i in range(reasonableMaxHeadLength):
-    if bufferMain[i].find("archiveofourown.org/works/") != -1 and not workID:
+    if (not workID) and bufferMain[i].find("archiveofourown.org/works/") != -1:
         temp = bufferMain[i].find("archiveofourown.org/works/") + len(
             "archiveofourown.org/works/"
         )
