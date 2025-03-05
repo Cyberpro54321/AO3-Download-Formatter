@@ -6,7 +6,7 @@ import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
 import datetime  # https://docs.python.org/3/library/datetime.html
 
-version = "0.3 rc1"
+version = "0.4 Release Candidate 1"
 startTime = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
 
 # argparse
