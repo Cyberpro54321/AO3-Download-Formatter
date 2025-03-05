@@ -242,8 +242,8 @@ bufferMain.append(
 
 if useDB:
     fieldnames = [
-        "Work Name",
         "Work ID",
+        "Work Name",
         "Current Chapter Count",
         "Current Total Chapter Count",
         "Date Formatted",
@@ -253,15 +253,15 @@ if useDB:
         with open(dbLocation, "r") as csvfile:
             reader = csv.DictReader(csvfile, fieldnames=fieldnames)
             for row in reader:
-                if row[fieldnames[1]] != fieldnames[1]:
+                if row[fieldnames[0]] != fieldnames[0]:
                     db.append(row)
     else:
         if not args.silent:
             print("No existing database detected, creating new one...")
     alreadyInDB = False
     for i in db:
-        if i[fieldnames[1]] == workID:
-            i[fieldnames[0]] = outputNameCore
+        if i[fieldnames[0]] == workID:
+            i[fieldnames[1]] = outputNameCore
             i[fieldnames[2]] = chapterCountCurrent
             i[fieldnames[3]] = chapterCountMax
             i[fieldnames[4]] = startTime
@@ -269,8 +269,8 @@ if useDB:
     if not alreadyInDB:
         db.append(
             {
-                fieldnames[0]: workName.strip(","),
-                fieldnames[1]: workID,
+                fieldnames[0]: workID,
+                fieldnames[1]: workName.strip(","),
                 fieldnames[2]: chapterCountCurrent,
                 fieldnames[3]: chapterCountMax,
                 fieldnames[4]: startTime,
