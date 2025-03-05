@@ -4,6 +4,7 @@ import argparse  # https://docs.python.org/3/library/argparse.html
 import configparser  # https://docs.python.org/3/library/configparser.html
 import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
+import time  # https://docs.python.org/3/library/time.html
 
 version = "0.3 rc1"
 
@@ -11,6 +12,7 @@ version = "0.3 rc1"
 parser = argparse.ArgumentParser()
 parser.add_argument("rawName")
 parser.add_argument("-c", "--config", default="config/config.ini")
+parser.add_argument("-d", "--database", default="config/db.csv")
 args = parser.parse_args()
 
 # configparser
@@ -192,6 +194,47 @@ bufferMain.append(
 )
 
 
+fieldnames = [
+    "Work Name",
+    "Work ID",
+    "Current Chapter Count",
+    "Current Total Chapter Count",
+    "Date Downloaded",
+]
+db = []
+if os.path.exists(args.database):
+    with open(args.database, "r") as csvfile:
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames)
+        for row in reader:
+            if row["Work ID"] != "Work ID":
+                db.append(row)
+else:
+    print("No existing database detected, creating new one...")
+alreadyInDB = False
+for i in db:
+    if i["Work ID"] == workID:
+        i["Work Name"] = workName
+        i["Current Chapter Count"] = chapterCountCurrent
+        i["Current Total Chapter Count"] = chapterCountMax
+        i["Date Downloaded"] = time.gmtime()
+        alreadyInDB = True
+if not alreadyInDB:
+    db.append(
+        {
+            "Work Name": workName,
+            "Work ID": workID,
+            "Current Chapter Count": chapterCountCurrent,
+            "Current Total Chapter Count": chapterCountMax,
+            "Date Downloaded": time.gmtime(),
+        }
+    )
+with open(args.database, "w") as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for i in db:
+        writer.writerow(i)
+
+
 outputNameCoreMaxLength = 255 - len("_[]") - len(workID) - len(".html")
 outputName = workName.replace(" ", "_")
 outputName = outputName.strip("/\\!#$%^*|;:<>?")
@@ -215,3 +258,4 @@ with open(outputFullName, "w") as output:
             i.find("<head") != -1 and i.find("</head>") == -1
         ):
             indent += 1
+print("Saved formatted file to " + outputFullName)
