@@ -6,7 +6,7 @@ import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
 import datetime  # https://docs.python.org/3/library/datetime.html
 
-version = "0.5 Release Candidate 1"
+version = "0.5 Release Candidate 2"
 startTime = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
 
 # argparse
@@ -187,8 +187,18 @@ headEnd = 0
 for i in range(reasonableMaxHeadLength):
     if (not headEnd) and bufferMain[i].find("</head>") != -1:
         headEnd = i
-bufferMain.insert(headEnd, '<link rel="stylesheet" href="sandbox.css">')
-bufferMain.insert(headEnd, '<link rel="stylesheet" href="' + outputNameCore + '.css">')
+bufferMain.insert(
+    headEnd,
+    '<link rel="stylesheet" href="'
+    + dirStorageProcessed
+    + dirWorkskins
+    + "/"
+    + outputNameCore
+    + '.css">',
+)
+bufferMain.insert(
+    headEnd, '<link rel="stylesheet" href="' + dirAO3CSS + '/sandbox.css">'
+)
 for i in reversed(stylesheets):
     bufferMain.insert(
         headEnd,
