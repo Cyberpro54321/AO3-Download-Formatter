@@ -199,33 +199,33 @@ fieldnames = [
     "Work ID",
     "Current Chapter Count",
     "Current Total Chapter Count",
-    "Date Downloaded",
+    "Date Formatted",
 ]
 db = []
 if os.path.exists(args.database):
     with open(args.database, "r") as csvfile:
         reader = csv.DictReader(csvfile, fieldnames=fieldnames)
         for row in reader:
-            if row["Work ID"] != "Work ID":
+            if row[fieldnames[1]] != fieldnames[1]:
                 db.append(row)
 else:
     print("No existing database detected, creating new one...")
 alreadyInDB = False
 for i in db:
-    if i["Work ID"] == workID:
-        i["Work Name"] = workName.strip(",")
-        i["Current Chapter Count"] = chapterCountCurrent
-        i["Current Total Chapter Count"] = chapterCountMax
-        i["Date Downloaded"] = time.gmtime()
+    if i[fieldnames[1]] == workID:
+        i[fieldnames[0]] = workName.strip(",")
+        i[fieldnames[2]] = chapterCountCurrent
+        i[fieldnames[3]] = chapterCountMax
+        i[fieldnames[4]] = time.gmtime()
         alreadyInDB = True
 if not alreadyInDB:
     db.append(
         {
-            "Work Name": workName.strip(","),
-            "Work ID": workID,
-            "Current Chapter Count": chapterCountCurrent,
-            "Current Total Chapter Count": chapterCountMax,
-            "Date Downloaded": time.gmtime(),
+            fieldnames[0]: workName.strip(","),
+            fieldnames[1]: workID,
+            fieldnames[2]: chapterCountCurrent,
+            fieldnames[3]: chapterCountMax,
+            fieldnames[4]: time.gmtime(),
         }
     )
 with open(args.database, "w") as csvfile:
