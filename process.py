@@ -14,6 +14,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("rawName")
 parser.add_argument("-c", "--config", default="config/config.ini")
 parser.add_argument("-d", "--database", default="config/db.csv")
+parser.add_argument("-q", "--quiet", action="store_true")
+parser.add_argument("-s", "--silent", action="store_true")
 args = parser.parse_args()
 
 # configparser
@@ -97,7 +99,8 @@ for i in [
             + ") doesn't exist: "
             + i
         )
-print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
+if (not args.quiet) and (not args.silent):
+    print("Searching for " + rawName + " in " + dirStorageProcessed + dirRaws)
 rawFullName = dirStorageProcessed + dirRaws + "/" + rawName
 if not os.path.exists(rawFullName):
     raise Exception("File not found: " + rawFullName)
@@ -118,7 +121,8 @@ for i in range(reasonableMaxHeadLength):
         )
         workID = bufferMain[i][temp: temp + 8]
         del temp
-        print("Work ID:   " + workID)
+        if (not args.quiet) and (not args.silent):
+            print("Work ID:   " + workID)
     if (not styleBuiltinStart) and bufferMain[i].find("<style") != -1:
         styleBuiltinStart = i
     if (not styleBuiltinEnd) and bufferMain[i].find("</style>") != -1:
@@ -174,7 +178,8 @@ for i in range(reasonableMaxHeadLength):
         workName = bufferMain[i][
             bufferMain[i].find(">") + 1: bufferMain[i].find("<", 3)
         ]
-        print("Work Name: " + workName)
+        if (not args.quiet) and (not args.silent):
+            print("Work Name: " + workName)
         bufferMain.insert(i, '<div class="preface group">')
         bufferMain.insert(i, '<div id="workskin">')
         bufferMain.insert(i, "</div>")
@@ -188,7 +193,8 @@ for i in range(reasonableMaxHeadLength):
         chapterLine = bufferMain[i]
 chapterCountCurrent = int(chapterLine.split()[1].split("/")[0])
 chapterCountMax = chapterLine.split()[1].split("/")[1]
-print("Chapter #: " + str(chapterCountCurrent) + "/" + chapterCountMax)
+if (not args.quiet) and (not args.silent):
+    print("Chapter #: " + str(chapterCountCurrent) + "/" + chapterCountMax)
 
 bufferMain.append(
     "<!-- This file written by AO3 Download Formatter version "
@@ -214,7 +220,8 @@ if os.path.exists(args.database):
             if row[fieldnames[1]] != fieldnames[1]:
                 db.append(row)
 else:
-    print("No existing database detected, creating new one...")
+    if not args.silent:
+        print("No existing database detected, creating new one...")
 alreadyInDB = False
 for i in db:
     if i[fieldnames[1]] == workID:
@@ -266,4 +273,5 @@ with open(outputFullName, "w") as output:
             i.find("<head") != -1 and i.find("</head>") == -1
         ):
             indent += 1
-print("Saved formatted file to " + outputFullName)
+if (not args.quiet) and (not args.silent):
+    print("Saved formatted file to " + outputFullName)
