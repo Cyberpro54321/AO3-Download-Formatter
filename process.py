@@ -6,7 +6,7 @@ import csv  # https://docs.python.org/3/library/csv.html
 import os.path  # https://docs.python.org/3/library/os.path.html
 import datetime  # https://docs.python.org/3/library/datetime.html
 
-version = "0.5 Release Candidate 2"
+version = "0.6 Release Candidate 1"
 startTime = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
 
 # argparse
@@ -176,7 +176,8 @@ outputNameCore = ""
 for i in workName:
     if i.isascii() and i.isprintable():
         outputNameCore = outputNameCore + i
-outputNameCore = outputNameCore.strip('/<>:"\\|?*')
+outputNameCore = outputNameCore.replace('"', "'")
+outputNameCore = outputNameCore.strip("/<>:\\|?*")
 if len(outputNameCore) > outputNameCoreMaxLength:
     outputNameCore = outputNameCore[:outputNameCoreMaxLength]
 outputNameCore = outputNameCore + " [" + workID + "]"
@@ -261,7 +262,7 @@ else:
 alreadyInDB = False
 for i in db:
     if i[fieldnames[1]] == workID:
-        i[fieldnames[0]] = workName.strip(",")
+        i[fieldnames[0]] = outputNameCore
         i[fieldnames[2]] = chapterCountCurrent
         i[fieldnames[3]] = chapterCountMax
         i[fieldnames[4]] = startTime
@@ -277,7 +278,7 @@ if not alreadyInDB:
         }
     )
 with open(args.database, "w") as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
     writer.writeheader()
     for i in db:
         writer.writerow(i)
