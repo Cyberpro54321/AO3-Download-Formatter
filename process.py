@@ -237,46 +237,47 @@ bufferMain.append(
 )
 
 
-fieldnames = [
-    "Work Name",
-    "Work ID",
-    "Current Chapter Count",
-    "Current Total Chapter Count",
-    "Date Formatted",
-]
-db = []
-if os.path.exists(args.database):
-    with open(args.database, "r") as csvfile:
-        reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-        for row in reader:
-            if row[fieldnames[1]] != fieldnames[1]:
-                db.append(row)
-else:
-    if not args.silent:
-        print("No existing database detected, creating new one...")
-alreadyInDB = False
-for i in db:
-    if i[fieldnames[1]] == workID:
-        i[fieldnames[0]] = outputNameCore
-        i[fieldnames[2]] = chapterCountCurrent
-        i[fieldnames[3]] = chapterCountMax
-        i[fieldnames[4]] = startTime
-        alreadyInDB = True
-if not alreadyInDB:
-    db.append(
-        {
-            fieldnames[0]: workName.strip(","),
-            fieldnames[1]: workID,
-            fieldnames[2]: chapterCountCurrent,
-            fieldnames[3]: chapterCountMax,
-            fieldnames[4]: startTime,
-        }
-    )
-with open(args.database, "w") as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
-    writer.writeheader()
+if useDB:
+    fieldnames = [
+        "Work Name",
+        "Work ID",
+        "Current Chapter Count",
+        "Current Total Chapter Count",
+        "Date Formatted",
+    ]
+    db = []
+    if os.path.exists(args.database):
+        with open(args.database, "r") as csvfile:
+            reader = csv.DictReader(csvfile, fieldnames=fieldnames)
+            for row in reader:
+                if row[fieldnames[1]] != fieldnames[1]:
+                    db.append(row)
+    else:
+        if not args.silent:
+            print("No existing database detected, creating new one...")
+    alreadyInDB = False
     for i in db:
-        writer.writerow(i)
+        if i[fieldnames[1]] == workID:
+            i[fieldnames[0]] = outputNameCore
+            i[fieldnames[2]] = chapterCountCurrent
+            i[fieldnames[3]] = chapterCountMax
+            i[fieldnames[4]] = startTime
+            alreadyInDB = True
+    if not alreadyInDB:
+        db.append(
+            {
+                fieldnames[0]: workName.strip(","),
+                fieldnames[1]: workID,
+                fieldnames[2]: chapterCountCurrent,
+                fieldnames[3]: chapterCountMax,
+                fieldnames[4]: startTime,
+            }
+        )
+    with open(args.database, "w") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        for i in db:
+            writer.writerow(i)
 
 
 with open(outputFullName, "w") as output:
