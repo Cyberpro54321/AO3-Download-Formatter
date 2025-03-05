@@ -48,6 +48,9 @@ if args.no_database:
     useDB = False
 if args.yes_database:
     useDB = True
+dbLocation = config["csv"]["file"]
+if args.database != "config/db.csv":
+    dbLocation = args.database
 rawName = args.rawName
 if rawName[-5:] != ".html":
     rawName = rawName + ".html"
@@ -246,8 +249,8 @@ if useDB:
         "Date Formatted",
     ]
     db = []
-    if os.path.exists(args.database):
-        with open(args.database, "r") as csvfile:
+    if os.path.exists(dbLocation):
+        with open(dbLocation, "r") as csvfile:
             reader = csv.DictReader(csvfile, fieldnames=fieldnames)
             for row in reader:
                 if row[fieldnames[1]] != fieldnames[1]:
@@ -273,7 +276,7 @@ if useDB:
                 fieldnames[4]: startTime,
             }
         )
-    with open(args.database, "w") as csvfile:
+    with open(dbLocation, "w") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
         writer.writeheader()
         for i in db:
